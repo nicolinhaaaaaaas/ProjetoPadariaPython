@@ -1,5 +1,5 @@
 import mysql.connector
-from classes import Cliente, Compra, Funcionario, Ingrediente, Produto, Pedido, Gerente, ProdutoIngrediente, PedidoProduto
+from classes import Cliente, Compra, Ingrediente, Produto, Pedido, Gerente, ProdutoIngrediente, PedidoProduto
 
 # Funções do Cliente ###########################################################
 def cadastroCliente(cursor, conexao):
@@ -196,95 +196,6 @@ def listarGerentes(cursor):
         resultado = cursor.fetchall()
         for gerente in resultado:
             print(f'ID: {gerente[0]}\tNome: {gerente[1]}\tEmail: {gerente[2]}\tSenha: {gerente[3]}\n')
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
-# Funções do Funcionário ###########################################################
-def cadastroFuncionario(cursor, conexao):
-    try:
-        nome = input('Digite o nome do novo funcionário: ')
-        email = input('Digite o email do novo funcionário: ')
-        contato = input('Digite o contato do novo funcionário: ')
-        cargo = input('Digite o cargo do novo funcionário: ')
-        salario = input('Digite o salário do novo funcionário: ')
-
-        cursor.execute(f'SELECT * FROM funcionario WHERE email_funcionario = "{email}"')
-        if cursor.fetchone() is not None:
-            print('Email já cadastrado!')
-            return
-        else:
-            cursor.execute(f'INSERT INTO funcionario (nome_funcionario, email_funcionario, contato_funcionario, cargo, salario) VALUES ("{nome}", "{email}", "{contato}", "{cargo}", "{salario}")')
-            conexao.commit()
-            print('Funcionário cadastrado com sucesso!')
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
-
-def atualizarFuncionario(cursor, conexao):
-    try:
-        print('Funcionários cadastrados no sistema:')
-        listarFuncionarios(cursor, conexao)
-        id = input('Digite o ID do funcionário que deseja atualizar: (0)-Cancelar')
-        if id == '0':
-            print('Operação cancelada')
-            return None
-        else:
-            cursor.execute(f'SELECT * FROM funcionario WHERE id_funcionario = "{id}"')
-            resultado = cursor.fetchone()
-            if resultado is None:
-                print('Funcionário não encontrado!')
-                return None
-            else:
-                print('Deseja atualizar os dados do funcionário? (1)-Sim (0)-Não')
-                if (input() == '1'):
-                    cargo = input('Digite o novo cargo do funcionário: ')
-                    salario = input('Digite o novo salário do funcionário: ')
-
-                    cursor.execute(f'UPDATE funcionario SET cargo = "{cargo}", salario = "{salario}" WHERE id_funcionario = "{id}"')
-                    conexao.commit()
-                    print('Dados atualizados com sucesso!')
-                else:
-                    print('Operação cancelada')
-                    return None
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
-def removerFuncionario(cursor, conexao):
-    try:
-        print('Funcionários cadastrados no sistema:')
-        listarFuncionarios(cursor, conexao)
-        id = input('Digite o ID do funcionário que deseja remover: (0)-Cancelar')
-        if id == '0':
-            print('Operação cancelada')
-            return None
-        else:
-            cursor.execute(f'SELECT * FROM funcionario WHERE id_funcionario = "{id}"')
-            resultado = cursor.fetchone()
-            if resultado is None:
-                print('Funcionário não encontrado!')
-                return None
-            else:
-                print('Deseja remover o funcionário? (1)-Sim (0)-Não')
-                if (input() == '1'):
-                    cursor.execute(f'DELETE FROM funcionario WHERE id_funcionario = "{id}"')
-                    conexao.commit()
-                    print('Funcionário removido com sucesso!')
-                else:
-                    print('Operação cancelada')
-                    return None
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
-def listarFuncionarios(cursor):
-    try:
-        cursor.execute('SELECT * FROM funcionario')
-        resultado = cursor.fetchall()
-        for funcionario in resultado:
-            print(f'ID: {funcionario[0]}\tNome: {funcionario[1]}\tEmail: {funcionario[2]}\tContato: {funcionario[3]}\tCargo: {funcionario[4]}\tSalário: {funcionario[5]}\n')
     except mysql.connector.Error as err:
         print(err)
         return None

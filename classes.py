@@ -20,18 +20,6 @@ class Gerente:
     def __str__(self):
         return f"Gerente: {self.nome_gerente} - ID: {self.id_gerente} - Email: {self.email_gerente}"
     
-class Funcionario:
-    def __init__(self, id_funcionario, id_gerente, nome_funcionario, contato_funcionario, cargo, salario):
-        self.id_funcionario = id_funcionario
-        self.id_gerente = id_gerente
-        self.nome_funcionario = nome_funcionario
-        self.contato_funcionario = contato_funcionario
-        self.cargo = cargo
-        self.salario = salario
-
-    def __str__(self):
-        return f"Funcionário: {self.nome_funcionario} - ID: {self.id_funcionario} - Contato: {self.contato_funcionario} - Cargo: {self.cargo} - Salário: R${self.salario}"
-    
 class Produto:
     def __init__(self, id_produto, nome_produto, descricao, preco):
         self.id_produto = id_produto
@@ -52,15 +40,14 @@ class Ingrediente:
         return f"Ingrediente: {self.nome_ingrediente} - ID: {self.id_ingrediente} - Unidade de Medida: {self.unidade_medida}"
     
 class Pedido:
-    def __init__(self, id_pedido, id_cliente, id_funcionario, status_pedido, valor_total):
+    def __init__(self, id_pedido, id_cliente, status_pedido, valor_total):
         self.id_pedido = id_pedido
         self.id_cliente = id_cliente
-        self.id_funcionario = id_funcionario
         self.status_pedido = status_pedido
         self.valor_total = valor_total
 
     def __str__(self):
-        return f"Pedido: {self.id_pedido} - ID Cliente: {self.id_cliente} - ID Funcionário: {self.id_funcionario} - Status: {self.status_pedido} - Valor Total: R${self.valor_total}"
+        return f"Pedido: {self.id_pedido} - ID Cliente: {self.id_cliente} - Status: {self.status_pedido} - Valor Total: R${self.valor_total}"
     
 class PedidoProduto:
     def __init__(self, id_pedido, id_produto, quantidade_comprada):
@@ -72,10 +59,9 @@ class PedidoProduto:
         return f"Pedido: {self.id_pedido} - Produto: {self.id_produto} - Quantidade: {self.quantidade_comprada}"
     
 class ProdutoIngrediente:
-    def __init__(self, id_produto, id_ingrediente, quantidade_usada):
+    def __init__(self, id_produto, id_ingrediente):
         self.id_produto = id_produto
         self.id_ingrediente = id_ingrediente
-        self.quantidade_usada = quantidade_usada
 
     def __str__(self):
-        return f"Produto: {self.id_produto} - Ingrediente: {self.id_ingrediente} - Quantidade: {self.quantidade_usada}"
+        return f"Produto: {self.id_produto} - Ingrediente: {self.id_ingrediente}"

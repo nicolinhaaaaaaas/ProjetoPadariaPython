@@ -35,16 +35,13 @@ if conexao.is_connected:
 
     # Opções do Gerente ###########################################################
     def menuGerente():
-        print('Escolha o que deseja fazer: \n(1)-Produtos \n(2)-Pedidos \n(3)-Funcionários \n(4)-Fornecedores \n(5)-Clientes \n(6)-Configurações \n(0)-Sair\n')
+        print('Escolha o que deseja fazer: \n(1)-Produtos \n(2)-Pedidos \n(3)-Clientes \n(4)-Configurações \n(0)-Sair\n')
 
     def menuProdutosGerente():
         print('MENU DE PRODUTOS: \n(1)-Listar produtos \n(2)-Buscar produto \n(3)-Cadastrar produto \n(4)-Atualizar produto \n(5)-Excluir produto \n(0)-Voltar\n')
 
     def menuPedidosGerente():
         print('MENU DE PEDIDOS: \n(1)-Listar Pedidos \n(2)-Buscar Pedido \n(3)-Atualizar Pedido \n(0)-Voltar\n')
-
-    def menuFuncionariosGerente():
-        print('MENU DE FUNCIONÁRIOS: \n(1)-Listar funcionários \n(2)-Cadastrar funcionário \n(3)-Atualizar funcionário \n(4)-Excluir funcionário \n(0)-Voltar\n')
 
     def menuFornecedoresGerente():
         print('MENU DE FORNECEDORES: \n(1)-Listar fornecedores \n(2)-Cadastrar fornecedor \n(3)-Fazer uma encomenda de estoque \n(4)-Listar estoque \n(0)-Voltar\n')
@@ -176,26 +173,7 @@ if conexao.is_connected:
                                     else:
                                         print('Opção inválida!')
                             
-                            elif opcao == '3': # Funcionários
-                                while True:
-                                    menuFuncionariosGerente()
-                                    opcao = input()
-                                    if opcao == '1': # Listar funcionários
-                                        listarFuncionarios(cursor)
-                                    elif opcao == '2': # Cadastrar funcionário
-                                        cadastroFuncionario(cursor, conexao)
-                                    elif opcao == '3': # Atualizar funcionário
-                                        atualizarFuncionario(cursor, conexao)
-                                    elif opcao == '4': # Excluir funcionário
-                                        removerFuncionario(cursor, conexao)
-                                    elif opcao == '0': # Voltar
-                                        break
-                                    else:
-                                        print('Opção inválida!')
-                            
-                            
-                            
-                            elif opcao == '4': # Clientes
+                            elif opcao == '3': # Clientes
                                 while True:
                                     menuClientesGerente()
                                     opcao = input()
@@ -209,7 +187,7 @@ if conexao.is_connected:
                                     else:
                                         print('Opção inválida!')
                             
-                            elif opcao == '5': # Configurações
+                            elif opcao == '4': # Configurações
                                 while True:
                                     menuConfiguracaoGerente()
                                     opcao = input()
