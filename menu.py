@@ -98,22 +98,6 @@ def listarClientes(cursor):
     except mysql.connector.Error as err:
         print(err)
         return None
-    
-def buscarCliente(cursor, conexao):
-    try:
-        cpf = input('Digite o CPF do cliente: ')
-        cursor.execute(f'SELECT * FROM cliente WHERE cpf = "{cpf}"')
-        resultado = cursor.fetchone()
-        if resultado is None:
-            print('Cliente não encontrado!')
-            return None
-        else:
-            cliente = Cliente(resultado[0], resultado[1], resultado[2], resultado[3], resultado[4], resultado[5])
-            return cliente
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
 
 # Funções do Gerente ###########################################################
 def cadastroGerente(cursor, conexao):
@@ -186,16 +170,6 @@ def removerContaGerente(objeto_gerente, cursor, conexao):
             print('Operação cancelada')
             return None
         
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
-def listarGerentes(cursor):
-    try:
-        cursor.execute('SELECT * FROM gerente')
-        resultado = cursor.fetchall()
-        for gerente in resultado:
-            print(f'ID: {gerente[0]}\tNome: {gerente[1]}\tEmail: {gerente[2]}\tSenha: {gerente[3]}\n')
     except mysql.connector.Error as err:
         print(err)
         return None
@@ -338,11 +312,11 @@ def fazerPedido(objeto_cliente, cursor, conexao):
             return None
         else:
             valor_total = 0
-            cursor.execute(f'INSERT INTO pedido (cliente_cpf, status, valor_total) VALUES ("{objeto_cliente.cpf}", "Em Andamento", "{valor_total}")')
+            cursor.execute(f'INSERT INTO pedido (cliente_cpf, valor_total) VALUES ("{objeto_cliente.cpf}", "{valor_total}")')
             conexao.commit()
             cursor.execute(f'SELECT LAST_INSERT_ID()')
             id_pedido = cursor.fetchone()
-            pedido = Pedido(id_pedido, objeto_cliente.cpf, 'Em Andamento', valor_total)
+            pedido = Pedido(id_pedido, objeto_cliente.cpf, valor_total)
             print('Produtos disponíveis no sistema: ')
             listarProdutos(cursor)
             while True:
@@ -362,7 +336,7 @@ def fazerPedido(objeto_cliente, cursor, conexao):
                     input('Deseja continuar comprando? (1)-Sim (0)-Não')
                     if input() == '0':
                         pedido.status = 'Finalizado'
-                        cursor.execute(f'UPDATE pedido SET status ="{pedido.status}" , "valor_total = "{valor_total + valor_compra}" WHERE id_pedido = "{id_pedido}"')
+                        cursor.execute(f'UPDATE pedido SET valor_total = "{valor_total + valor_compra}" WHERE id_pedido = "{id_pedido}"')
                         conexao.commit()
                         print('Pedido realizado com sucesso!')
                         break
@@ -374,67 +348,12 @@ def fazerPedido(objeto_cliente, cursor, conexao):
         print(err)
         return None
 
-def atualizarPedido(cursor, conexao):
-    try:
-        print('Lista de pedidos: ')
-        listarPedidos(cursor, conexao)
-        id_pedido = input('Digite o ID do pedido que deseja atualizar: (0)-Cancelar Operação')
-        if id_pedido == '0':
-            print('Operação cancelada')
-            return None
-        else:
-            cursor.execute(f'SELECT * FROM pedido WHERE id_pedido = "{id_pedido}"')
-            resultado = cursor.fetchone()
-            if resultado is None:
-                print('Pedido não encontrado!')
-                return None
-            else:
-                print('Deseja atualizar o status do pedido? (1)-Sim (0)-Não')
-                if input() == '1':
-                    status = input('Digite o novo status do pedido: ')
-                    cursor.execute(f'UPDATE pedido SET status_pedido = "{status}" WHERE id_pedido = "{id_pedido}"')
-                    conexao.commit()
-                    print('Status do pedido atualizado com sucesso!')
-                else:
-                    print('Operação cancelada')
-                    return None
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
-def cancelarPedido(objeto_cliente, cursor, conexao):
-    try:
-        print('Lista de pedidos feita por você: ')
-        listarPedidosPorCliente(objeto_cliente, cursor, conexao)
-        id_pedido = input('Digite o ID do pedido que deseja cancelar: (0)-Cancelar Operação')
-        if id_pedido == '0':
-            print('Operação cancelada')
-            return None
-        else:
-            cursor.execute(f'SELECT * FROM pedido WHERE id_pedido = "{id_pedido}"')
-            resultado = cursor.fetchone()
-            if resultado is None:
-                print('Pedido não encontrado!')
-                return None
-            else:
-                print('Deseja cancelar o pedido? (1)-Sim (0)-Não')
-                if input() == '1':
-                    cursor.execute(f'UPDATE pedido SET status_pedido = "Cancelado" WHERE id_pedido = "{id_pedido}"')
-                    conexao.commit()
-                    print('Pedido cancelado com sucesso!')
-                else:
-                    print('Operação cancelada')
-                    return None
-    except mysql.connector.Error as err:
-        print(err)
-        return None
-
 def listarPedidos(cursor):
     try:
         cursor.execute('SELECT * FROM pedido')
         resultado = cursor.fetchall()
         for pedido in resultado:
-            print(f'ID: {pedido[0]}\tCPF do cliente: {pedido[1]}\tStatus: {pedido[2]}\tValor total: {pedido[3]}\n')
+            print(f'ID: {pedido[0]}\tCPF do cliente: {pedido[1]}\tValor total: {pedido[2]}\n')
     except mysql.connector.Error as err:
         print(err)
         return None
@@ -444,7 +363,7 @@ def listarPedidosPorCliente(objeto_cliente, cursor):
         cursor.execute(f'SELECT * FROM pedido WHERE cliente_cpf = "{objeto_cliente.cpf}"')
         resultado = cursor.fetchall()
         for pedido in resultado:
-            print(f'ID: {pedido[0]}\tCPF do cliente: {pedido[1]}\tStatus: {pedido[2]}\tValor total: {pedido[3]}\n')
+            print(f'ID: {pedido[0]}\tCPF do cliente: {pedido[1]}\tValor total: {pedido[2]}\n')
     except mysql.connector.Error as err:
         print(err)
         return None
@@ -458,8 +377,8 @@ def buscarPedido(cursor):
             print('Pedido não encontrado!')
             return None
         else:
-            pedido = Pedido(resultado[0], resultado[1], resultado[2], resultado[3])
-            print(f'ID: {pedido.pedido_id}\tCPF do cliente: {pedido.cliente_cpf}\tStatus: {pedido.status}\tValor total: {pedido.valor_total}\n')
+            pedido = Pedido(resultado[0], resultado[1], resultado[2])
+            print(f'ID: {pedido.pedido_id}\tCPF do cliente: {pedido.cliente_cpf}\tValor total: {pedido.valor_total}\n')
             return pedido
     except mysql.connector.Error as err:
         print(err)

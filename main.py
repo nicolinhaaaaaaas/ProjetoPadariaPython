@@ -28,7 +28,7 @@ if conexao.is_connected:
         print('MENU DE PRODUTOS: \n(1)-Listar produtos \n(2)-Buscar produto \n(0)-Voltar\n')
 
     def menuPedidoCliente():
-        print('MENU DE PEDIDOS: \n(1)-Fazer um pedido \n(2)-Listar Pedidos \n(3)-Cancelar Pedido \n(0)-Voltar\n')
+        print('MENU DE PEDIDOS: \n(1)-Fazer um pedido \n(2)-Listar Pedidos \n(0)-Voltar\n')
 
     def menuConfiguracaoCliente():
         print('MENU DE CONFIGURAÇÕES: \n(1)-Atualizar conta \n(2)-Excluir conta \n(0)-Voltar\n')
@@ -41,13 +41,10 @@ if conexao.is_connected:
         print('MENU DE PRODUTOS: \n(1)-Listar produtos \n(2)-Buscar produto \n(3)-Cadastrar produto \n(4)-Atualizar produto \n(5)-Excluir produto \n(0)-Voltar\n')
 
     def menuPedidosGerente():
-        print('MENU DE PEDIDOS: \n(1)-Listar Pedidos \n(2)-Buscar Pedido \n(3)-Atualizar Pedido \n(0)-Voltar\n')
-
-    def menuFornecedoresGerente():
-        print('MENU DE FORNECEDORES: \n(1)-Listar fornecedores \n(2)-Cadastrar fornecedor \n(3)-Fazer uma encomenda de estoque \n(4)-Listar estoque \n(0)-Voltar\n')
+        print('MENU DE PEDIDOS: \n(1)-Listar Pedidos \n(2)-Buscar Pedido \n(0)-Voltar\n')
 
     def menuClientesGerente():
-        print('MENU DE CLIENTES: \n(1)-Listar clientes \n(2)-Buscar cliente \n(3)-Excluir cliente \n(0)-Voltar\n')
+        print('MENU DE CLIENTES: \n(1)-Listar clientes \n(0)-Voltar\n')
 
     def menuConfiguracaoGerente():
         print('MENU DE CONFIGURAÇÕES: \n(1)-Atualizar conta \n(2)-Excluir conta \n(0)-Voltar\n')
@@ -93,8 +90,6 @@ if conexao.is_connected:
                                     elif opcao == '2': # Listar Pedidos
                                         listarPedidos(cursor, cliente)
                                     elif opcao == '3': # Cancelar Pedido
-                                        cancelarPedido(cursor, conexao, cliente)
-                                    elif opcao == '0': # Voltar
                                         break
                                     else:
                                         print('Opção inválida!')
@@ -167,8 +162,6 @@ if conexao.is_connected:
                                     elif opcao == '2': # Buscar Pedido
                                         buscarPedido(cursor)
                                     elif opcao == '3': # Atualizar Pedido
-                                        atualizarPedido(cursor, conexao)
-                                    elif opcao == '0': # Voltar
                                         break
                                     else:
                                         print('Opção inválida!')
@@ -181,7 +174,6 @@ if conexao.is_connected:
                                         listarClientes(cursor)
                                     elif opcao == '2': # Buscar cliente
                                         buscarCliente(cursor)
-                                    
                                     elif opcao == '0': # Voltar
                                         break
                                     else:

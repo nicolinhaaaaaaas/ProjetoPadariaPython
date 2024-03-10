@@ -2,6 +2,9 @@
 
 O Sistema é fundado na base de web apps para lanchonetes, nele existem dois tipos de usuários: o usuário Gerenciador e o usuário Cliente. O usuário gerenciador do sistema pode monitorar com facilidade o andamento da produção e venda de produtos e a utilização dos clientes para com o sistema. Já o usuário cliente tem uma visão mais simplificada do sistema, onde ele terá acesso aos produtos e possuirá as ferramentas necessárias para adquiri-los com praticidade.
 
+#### Detalhe: O diagrama de Casos de Uso e a listagem das Atividades de teste se encontram no Documento de Requisitos abaixo:
+- [Documento de Requisitos](https://docs.google.com/document/d/1VZAQwi-wWcI1Pojr3fxvPUNpWCwJC9G8UvL5R2CDnJY/edit?usp=sharing)
+
 ### Requisitos Específicos
 
 #### Requisitos Funcionais
@@ -46,4 +49,7 @@ O Sistema é fundado na base de web apps para lanchonetes, nele existem dois tip
 #### Links
 
 - [Definição do Projeto](https://docs.google.com/document/d/1aB7H954YnM86No2cJD2W1fbGBrpx1YQxtizM6FBeqHw/edit?usp=sharing)
+
+#### Detalhe: O diagrama de Casos de Uso e a listagem das Atividades de teste se encontram no Documento de Requisitos abaixo:
 - [Documento de Requisitos](https://docs.google.com/document/d/1VZAQwi-wWcI1Pojr3fxvPUNpWCwJC9G8UvL5R2CDnJY/edit?usp=sharing)
+

@@ -13,7 +13,6 @@ class Cliente {
     + atualizarContaCliente(): void
     + removerContaCliente(): void
     + listarClientes(): string
-    + buscarCliente(): Cliente
 }
 
 class Gerente {
@@ -26,7 +25,6 @@ class Gerente {
     + loginGerente(): Gerente
     + atualizarContaGerente(): void
     + removerContaGerente(): void
-    + listarGerentes(): string
 }
 
 class Produto {
@@ -48,18 +46,14 @@ class Ingrediente {
     - unidade_medida: string
 
     + cadastroIngrediente(): void
-    + listarIngredientes(): string
 }
 
 class Pedido{
     - id_pedido: int
     - id_cliente: int
-    - status_pedido: string
     - valor_total: double
 
     + fazerPedido(): void
-    + atualizarPedido(): void
-    + cancelarPedido(): void
     + listarPedidos(): string
     + listarPedidosPorCliente(): string
     + buscarPedido(): Pedido

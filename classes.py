@@ -40,14 +40,13 @@ class Ingrediente:
         return f"Ingrediente: {self.nome_ingrediente} - ID: {self.id_ingrediente} - Unidade de Medida: {self.unidade_medida}"
     
 class Pedido:
-    def __init__(self, id_pedido, id_cliente, status_pedido, valor_total):
+    def __init__(self, id_pedido, id_cliente, valor_total):
         self.id_pedido = id_pedido
         self.id_cliente = id_cliente
-        self.status_pedido = status_pedido
         self.valor_total = valor_total
 
     def __str__(self):
-        return f"Pedido: {self.id_pedido} - ID Cliente: {self.id_cliente} - Status: {self.status_pedido} - Valor Total: R${self.valor_total}"
+        return f"Pedido: {self.id_pedido} - ID Cliente: {self.id_cliente} - Valor Total: R${self.valor_total}"
     
 class PedidoProduto:
     def __init__(self, id_pedido, id_produto, quantidade_comprada):
