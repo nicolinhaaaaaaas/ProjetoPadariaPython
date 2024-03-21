@@ -1,5 +1,5 @@
 import mysql.connector
-from classes import Cliente, Compra, Ingrediente, Produto, Pedido, Gerente, ProdutoIngrediente, PedidoProduto
+from classes import Cliente, Ingrediente, Produto, Pedido, Gerente, ProdutoIngrediente, PedidoProduto
 
 # Funções do Cliente ###########################################################
 def cadastroCliente(cursor, conexao):
@@ -330,7 +330,7 @@ def fazerPedido(objeto_cliente, cursor, conexao):
                     produto = Produto(resultado[0], resultado[1], resultado[2], resultado[3])
                     quantidade_comprada = input('Digite a quantidade que deseja comprar: ')
                     valor_compra = produto.preco * quantidade_comprada   
-                    compra = Compra(id_pedido, id_produto, quantidade_comprada)
+                    compra = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
                     cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.pedido_id}", "{compra.produto_id}", "{compra.quantidade_comprada}")')
                     conexao.commit()
                     input('Deseja continuar comprando? (1)-Sim (0)-Não')
