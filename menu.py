@@ -195,7 +195,7 @@ def cadastroProduto(cursor, conexao):
                 resultado = cursor.fetchone()
                 if resultado is None:
                     unidadeMedida = input('Digite a unidade de medida do ingrediente: ')
-                    cursor.execute(f'INSERT INTO ingrediente (nome_ingrediente, estoque, unidade_medida) VALUES ("{ingrediente}", "0", "{unidadeMedida}")')
+                    cursor.execute(f'INSERT INTO ingrediente (nome_ingrediente unidade_medida) VALUES ("{ingrediente}", "{unidadeMedida}")')
                     conexao.commit()
                     cursor.execute(f'SELECT LAST_INSERT_ID()')
                     id_ingrediente = cursor.fetchone()
@@ -204,7 +204,7 @@ def cadastroProduto(cursor, conexao):
                     conexao.commit()
                     i += 1
                 else:
-                    ingrediente = Ingrediente(resultado[0], resultado[1], resultado[2], resultado[3])
+                    ingrediente = Ingrediente(resultado[0], resultado[1], resultado[2])
                     produtoIngrediente2 = ProdutoIngrediente(id_produto, id_ingrediente, quantidadeUtilizada)
                     cursor.execute(f'INSERT INTO produto_ingrediente (id_produto, id_ingrediente, quantidade_usada) VALUES ("{produtoIngrediente2.produto_id}", "{produtoIngrediente2.ingrediente_id}", "{produtoIngrediente2.quantidade_usada}");')
                     conexao.commit()
@@ -335,7 +335,6 @@ def fazerPedido(objeto_cliente, cursor, conexao):
                     conexao.commit()
                     input('Deseja continuar comprando? (1)-Sim (0)-Não')
                     if input() == '0':
-                        pedido.status = 'Finalizado'
                         cursor.execute(f'UPDATE pedido SET valor_total = "{valor_total + valor_compra}" WHERE id_pedido = "{id_pedido}"')
                         conexao.commit()
                         print('Pedido realizado com sucesso!')

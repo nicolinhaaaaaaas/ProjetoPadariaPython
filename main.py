@@ -172,8 +172,6 @@ if conexao.is_connected:
                                     opcao = input()
                                     if opcao == '1': # Listar clientes
                                         listarClientes(cursor)
-                                    elif opcao == '2': # Buscar cliente
-                                        buscarCliente(cursor)
                                     elif opcao == '0': # Voltar
                                         break
                                     else:
