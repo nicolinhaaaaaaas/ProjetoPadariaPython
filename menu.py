@@ -1,5 +1,5 @@
 import mysql.connector
-from classes import Cliente, Compra, Ingrediente, Produto, Pedido, Gerente, ProdutoIngrediente, PedidoProduto
+from classes import Cliente, Ingrediente, Produto, Pedido, Gerente, ProdutoIngrediente, PedidoProduto
 
 # Funções do Cliente ###########################################################
 def cadastroCliente(cursor, conexao):
@@ -11,7 +11,12 @@ def cadastroCliente(cursor, conexao):
         endereco = input('Digite seu Endereço: ')
         contato = input('Digite seu telefone de Contato: ')
 
-        cursor.execute(f'SELECT * FROM cliente WHERE cpf = "{cpf}"')
+        # Verifica se todos os campos estão preenchidos
+        if nome.strip() == '' or cpf.strip() == '' or email.strip() == '' or senha.strip() == '' or endereco.strip() == '' or contato.strip() == '':
+            print('Por favor, preencha todos os campos.')
+            return
+        
+        cursor.execute(f'SELECT * FROM cliente WHERE cpf_cliente = "{cpf}"')
         if cursor.fetchone() is not None:
             print('CPF já cadastrado!')
             return
@@ -22,7 +27,7 @@ def cadastroCliente(cursor, conexao):
                 return
             else:   
                 cliente = Cliente(nome, cpf, email, senha, endereco, contato)
-                cursor.execute(f'INSERT INTO cliente (nome_cliente, cpf, email_cliente, senha_cliente, endereco, contato) VALUES ("{cliente.nome}", "{cliente.cpf}", "{cliente.email}", "{cliente.senha}", "{cliente.endereco}", "{cliente.contato}")')
+                cursor.execute(f'INSERT INTO cliente (nome_cliente, cpf_cliente, email_cliente, senha_cliente, endereco, contato) VALUES ("{cliente.nome}", "{cliente.cpf}", "{cliente.email}", "{cliente.senha}", "{cliente.endereco}", "{cliente.contato}")')
                 conexao.commit()
                 print('Cliente cadastrado com sucesso!')
     
@@ -33,9 +38,15 @@ def cadastroCliente(cursor, conexao):
 
 def loginCliente(cursor):
     try:
-        #parte que importa
+        # Parte que importa
         email = input('Digite seu Email: ')
         senha = input('Digite sua Senha: ')
+
+        # Verifica se os campos estão preenchidos
+        if email.strip() == '' or senha.strip() == '':
+            print('Por favor, preencha todos os campos.')
+            return None
+
         cursor.execute(f'SELECT * FROM cliente WHERE email_cliente = "{email}" AND senha_cliente = "{senha}"')
         
         resultado = cursor.fetchone()
@@ -56,11 +67,22 @@ def atualizarContaCliente(objeto_cliente, cursor, conexao):
     try:
         print('Deseja atualizar seus dados? (1)-Sim (0)-Não')
         if (input() == '1'):
-            objeto_cliente.nome = input('Digite seu novo nome:')
-            objeto_cliente.email = input('Digite seu novo email:')
-            objeto_cliente.senha = input('Digite sua nova senha:')
-            objeto_cliente.endereco = input('Digite seu novo endereço:')
-            objeto_cliente.contato = input('Digite seu novo contato:')
+            novo_nome = input('Digite seu novo nome:')
+            novo_email = input('Digite seu novo email:')
+            nova_senha = input('Digite sua nova senha:')
+            novo_endereco = input('Digite seu novo endereço:')
+            novo_contato = input('Digite seu novo contato:')
+
+            # Verifica se todos os campos estão preenchidos
+            if novo_nome.strip() == '' or novo_email.strip() == '' or nova_senha.strip() == '' or novo_endereco.strip() == '' or novo_contato.strip() == '':
+                print('Por favor, preencha todos os campos.')
+                return None
+
+            objeto_cliente.nome = novo_nome
+            objeto_cliente.email = novo_email
+            objeto_cliente.senha = nova_senha
+            objeto_cliente.endereco = novo_endereco
+            objeto_cliente.contato = novo_contato
 
             cursor.execute(f'UPDATE cliente SET nome_cliente = "{objeto_cliente.nome}", email_cliente = "{objeto_cliente.email}", senha_cliente = "{objeto_cliente.senha}", endereco = "{objeto_cliente.endereco}", contato = "{objeto_cliente.contato}" WHERE cpf = "{objeto_cliente.cpf}"')
             conexao.commit()
@@ -106,6 +128,11 @@ def cadastroGerente(cursor, conexao):
         email = input('Digite seu email: ')
         senha = input('Digite sua senha: ')
 
+        # Verifica se todos os campos estão preenchidos
+        if nome.strip() == '' or email.strip() == '' or senha.strip() == '':
+            print('Por favor, preencha todos os campos.')
+            return
+
         cursor.execute(f'SELECT * FROM gerente WHERE email_gerente = "{email}"')
         if cursor.fetchone() is not None:
             print('Email já cadastrado!')
@@ -124,6 +151,12 @@ def loginGerente(cursor):
     try:
         email = input('Digite seu Email: ')
         senha = input('Digite sua Senha: ')
+
+        # Verifica se os campos estão preenchidos
+        if email.strip() == '' or senha.strip() == '':
+            print('Por favor, preencha todos os campos.')
+            return None
+
         cursor.execute(f'SELECT * FROM gerente WHERE email_gerente = "{email}" AND senha_gerente = "{senha}"')
         
         resultado = cursor.fetchone()
@@ -143,9 +176,18 @@ def atualizarContaGerente(objeto_gerente, cursor, conexao):
     try:
         print('Deseja atualizar seus dados? (1)-Sim (0)-Não')
         if (input() == '1'):
-            objeto_gerente.nome = input('Digite seu novo nome:')
-            objeto_gerente.email = input('Digite seu novo email:')
-            objeto_gerente.senha = input('Digite sua nova senha:')
+            novo_nome = input('Digite seu novo nome:')
+            novo_email = input('Digite seu novo email:')
+            nova_senha = input('Digite sua nova senha:')
+
+            # Verifica se todos os campos estão preenchidos
+            if novo_nome.strip() == '' or novo_email.strip() == '' or nova_senha.strip() == '':
+                print('Por favor, preencha todos os campos.')
+                return None
+
+            objeto_gerente.nome = novo_nome
+            objeto_gerente.email = novo_email
+            objeto_gerente.senha = nova_senha
 
             cursor.execute(f'UPDATE gerente SET nome_gerente = "{objeto_gerente.nome}", email_gerente = "{objeto_gerente.email}", senha_gerente = "{objeto_gerente.senha}" WHERE email_gerente = "{objeto_gerente.email}"')
             conexao.commit()
@@ -175,52 +217,62 @@ def removerContaGerente(objeto_gerente, cursor, conexao):
         return None
 
 # Funções do Produto ###########################################################
+def cadastrarIngrediente(cursor, conexao, nome, unidade_medida):
+    try:
+        cursor.execute("INSERT INTO ingrediente (nome_ingrediente, unidade_medida) VALUES (%s, %s)", (nome, unidade_medida))
+        conexao.commit()
+        return cursor.lastrowid
+    except mysql.connector.Error as err:
+        print(f"Erro ao cadastrar ingrediente: {err}")
+        return None
+
+def cadastrarProdutoIngrediente(cursor, conexao, id_produto, id_ingrediente, quantidade_usada):
+    try:
+        cursor.execute("INSERT INTO produto_ingrediente (id_produto, id_ingrediente, quantidade_usada) VALUES (%s, %s, %s)", (id_produto, id_ingrediente, quantidade_usada))
+        conexao.commit()
+    except mysql.connector.Error as err:
+        print(f"Erro ao cadastrar produto ingrediente: {err}")
+
 def cadastroProduto(cursor, conexao):
     try:
         nome = input('Nome do produto: ')
         descricao = input('Descrição do produto: ')
-        preco = input('Preço do produto: ')
-        cursor.execute(f'INSERT INTO produto (nome_produto, descricao, preco) VALUES ("{nome}", "{descricao}", "{preco}");')
-        conexao.commit()
-        cursor.execute(f'SELECT LAST_INSERT_ID();')
-        id_produto = cursor.fetchone()
+        preco = float(input('Preço do produto: '))
 
-        quantidade = input('Quantos ingredientes esse produto leva? ')
-        if quantidade.isdigit():
-            quantidade = int(quantidade)
-            for i in range(0, quantidade):
-                ingrediente = input('Digite o nome do ingrediente: ')
-                quantidadeUtilizada = input('Digite a quantidade do ingrediente: ')
-                cursor.execute(f'SELECT * FROM ingrediente WHERE nome_ingrediente = "{ingrediente}"')
-                resultado = cursor.fetchone()
-                if resultado is None:
-                    unidadeMedida = input('Digite a unidade de medida do ingrediente: ')
-                    cursor.execute(f'INSERT INTO ingrediente (nome_ingrediente unidade_medida) VALUES ("{ingrediente}", "{unidadeMedida}")')
-                    conexao.commit()
-                    cursor.execute(f'SELECT LAST_INSERT_ID()')
-                    id_ingrediente = cursor.fetchone()
-                    produtoIngrediente1 = ProdutoIngrediente(id_produto, id_ingrediente, quantidadeUtilizada)
-                    cursor.execute(f'INSERT INTO produto_ingrediente (id_produto, id_ingrediente, quantidade_usada) VALUES ("{produtoIngrediente1.produto_id}", "{produtoIngrediente1.ingrediente_id}", "{produtoIngrediente1.quantidade_usada}");')
-                    conexao.commit()
-                    i += 1
-                else:
-                    ingrediente = Ingrediente(resultado[0], resultado[1], resultado[2])
-                    produtoIngrediente2 = ProdutoIngrediente(id_produto, id_ingrediente, quantidadeUtilizada)
-                    cursor.execute(f'INSERT INTO produto_ingrediente (id_produto, id_ingrediente, quantidade_usada) VALUES ("{produtoIngrediente2.produto_id}", "{produtoIngrediente2.ingrediente_id}", "{produtoIngrediente2.quantidade_usada}");')
-                    conexao.commit()
-                    i += 1
-        else:
-            print('Valor inválido!')
-            return None
+        if nome.strip() == '' or descricao.strip() == '' or preco <= 0:
+            print('Por favor, preencha todos os campos corretamente.')
+            return
+
+        cursor.execute("INSERT INTO produto (nome_produto, descricao, preco) VALUES (%s, %s, %s)", (nome, descricao, preco))
+        conexao.commit()
+        id_produto = cursor.lastrowid
+
+        quantidade = int(input('Quantos ingredientes esse produto leva? '))
+        for _ in range(quantidade):
+            ingrediente = input('Digite o nome do ingrediente: ')
+            quantidade_utilizada = float(input('Digite a quantidade do ingrediente: '))
+            unidade_medida = input('Digite a unidade de medida do ingrediente: ')
+
+            id_ingrediente = cadastrarIngrediente(cursor, conexao, ingrediente, unidade_medida)
+            if id_ingrediente:
+                cadastrarProdutoIngrediente(cursor, conexao, id_produto, id_ingrediente, quantidade_utilizada)
+
+        print('Produto cadastrado com sucesso!')
     except mysql.connector.Error as err:
-        print(err)
-        return None
+        print(f"Erro ao cadastrar produto: {err}")
+
 
 def atualizarProduto(cursor, conexao):
     try:
         print('Produtos cadastrados no sistema: ')
         listarProdutos(cursor)
         id = input('Digite o ID do produto que deseja atualizar: (0)-Cancelar')
+        
+        # Verifica se o campo ID foi preenchido
+        if id.strip() == '':
+            print('Por favor, insira o ID do produto.')
+            return None
+        
         if id == '0':
             print('Operação cancelada')
             return None
@@ -236,6 +288,12 @@ def atualizarProduto(cursor, conexao):
                     nome = input('Digite o novo nome do produto: ')
                     descricao = input('Digite a nova descrição do produto: ')
                     preco = input('Digite o novo preço do produto: ')
+
+                    # Verifica se todos os campos estão preenchidos
+                    if nome.strip() == '' or descricao.strip() == '' or preco.strip() == '':
+                        print('Por favor, preencha todos os campos.')
+                        return None
+
                     cursor.execute(f'UPDATE produto SET nome_produto = "{nome}", descricao = "{descricao}", preco = "{preco}" WHERE id_produto = "{id}"')
                     conexao.commit()
                     print('Dados atualizados com sucesso!')
@@ -245,6 +303,7 @@ def atualizarProduto(cursor, conexao):
     except mysql.connector.Error as err:
         print(err)
         return None
+
 
 def removerProduto(cursor, conexao):
     try:
@@ -330,8 +389,8 @@ def fazerPedido(objeto_cliente, cursor, conexao):
                     produto = Produto(resultado[0], resultado[1], resultado[2], resultado[3])
                     quantidade_comprada = input('Digite a quantidade que deseja comprar: ')
                     valor_compra = produto.preco * quantidade_comprada   
-                    compra = Compra(id_pedido, id_produto, quantidade_comprada)
-                    cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.pedido_id}", "{compra.produto_id}", "{compra.quantidade_comprada}")')
+                    compra = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
+                    cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.id_pedido}", "{compra.id_produto}", "{compra.quantidade_comprada}")')
                     conexao.commit()
                     input('Deseja continuar comprando? (1)-Sim (0)-Não')
                     if input() == '0':
