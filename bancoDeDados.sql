@@ -23,7 +23,7 @@ CREATE TABLE Funcionario (
     contato_funcionario VARCHAR(20),
     cargo VARCHAR(100),
     salario DECIMAL(10, 2),
-    PRIMARY KEY (id_funcionario)
+    PRIMARY KEY (id_funcionario),
     FOREIGN KEY (id_gerente) REFERENCES Gerente(id_gerente)
 );
 
@@ -44,7 +44,7 @@ CREATE TABLE Ingrediente (
 
 CREATE TABLE Pedido (
     id_pedido INT AUTO_INCREMENT,
-    id_cliente INT,
+    id_cliente VARCHAR(50),
     id_funcionario INT,
     status_pedido VARCHAR(50),
     valor_total DECIMAL(10, 2),
@@ -67,6 +67,6 @@ CREATE TABLE ProdutoIngrediente (
     id_ingrediente INT,
     quantidade_usada INT,
     PRIMARY KEY (id_produto, id_ingrediente),
-    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto)
+    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto),
     FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente(id_ingrediente)
 );

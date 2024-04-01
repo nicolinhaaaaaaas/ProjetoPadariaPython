@@ -391,6 +391,8 @@ def fazerPedido(objeto_cliente, cursor, conexao):
                     valor_compra = produto.preco * quantidade_comprada   
                     compra = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
                     cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.id_pedido}", "{compra.id_produto}", "{compra.quantidade_comprada}")')
+                    compra = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
+                    cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.pedido_id}", "{compra.produto_id}", "{compra.quantidade_comprada}")')
                     conexao.commit()
                     input('Deseja continuar comprando? (1)-Sim (0)-Não')
                     if input() == '0':
