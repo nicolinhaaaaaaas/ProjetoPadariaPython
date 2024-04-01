@@ -27,7 +27,7 @@ def cadastroCliente(cursor, conexao):
                 return
             else:   
                 cliente = Cliente(nome, cpf, email, senha, endereco, contato)
-                cursor.execute(f'INSERT INTO cliente (nome_cliente, cpf_cliente, email_cliente, senha_cliente, endereco, contato) VALUES ("{cliente.nome}", "{cliente.cpf}", "{cliente.email}", "{cliente.senha}", "{cliente.endereco}", "{cliente.contato}")')
+                cursor.execute(f'INSERT INTO cliente (nome_cliente, cpf_cliente, email_cliente, senha_cliente, endereco, contato) VALUES ("{cliente.nome_cliente}", "{cliente.cpf}", "{cliente.email_cliente}", "{cliente.senha_cliente}", "{cliente.endereco}", "{cliente.contato}")')
                 conexao.commit()
                 print('Cliente cadastrado com sucesso!')
     
@@ -78,13 +78,13 @@ def atualizarContaCliente(objeto_cliente, cursor, conexao):
                 print('Por favor, preencha todos os campos.')
                 return None
 
-            objeto_cliente.nome = novo_nome
-            objeto_cliente.email = novo_email
-            objeto_cliente.senha = nova_senha
+            objeto_cliente.nome_cliente = novo_nome
+            objeto_cliente.email_cliente = novo_email
+            objeto_cliente.senha_cliente = nova_senha
             objeto_cliente.endereco = novo_endereco
             objeto_cliente.contato = novo_contato
 
-            cursor.execute(f'UPDATE cliente SET nome_cliente = "{objeto_cliente.nome}", email_cliente = "{objeto_cliente.email}", senha_cliente = "{objeto_cliente.senha}", endereco = "{objeto_cliente.endereco}", contato = "{objeto_cliente.contato}" WHERE cpf = "{objeto_cliente.cpf}"')
+            cursor.execute(f'UPDATE cliente SET nome_cliente = "{objeto_cliente.nome_cliente}", email_cliente = "{objeto_cliente.email_cliente}", senha_cliente = "{objeto_cliente.senha_cliente}", endereco = "{objeto_cliente.endereco}", contato = "{objeto_cliente.contato}" WHERE cpf = "{objeto_cliente.cpf}"')
             conexao.commit()
             print('Dados atualizados com sucesso!')
 
@@ -101,7 +101,7 @@ def removerContaCliente(objeto_cliente, cursor, conexao):
     try:
         print('Deseja remover sua conta? (1)-Sim (0)-Não')
         if (input() == '1'):
-            cursor.execute(f'DELETE FROM cliente WHERE cpf = "{objeto_cliente.cpf}"')
+            cursor.execute(f'DELETE FROM cliente WHERE cpf_cliente = "{objeto_cliente.cpf}"')
             conexao.commit()
             print('Conta removida com sucesso!')
         else:
@@ -116,7 +116,7 @@ def listarClientes(cursor):
         cursor.execute('SELECT * FROM cliente')
         resultado = cursor.fetchall()
         for cliente in resultado:
-            print(f'Nome: {cliente[0]}\tCPF: {cliente[1]}\tEmail: {cliente[2]}\tSenha: {cliente[3]}\tEndereço: {cliente[4]}\tContato: {cliente[5]}\n')
+            print(f'CPF: {cliente[0]}\tNome: {cliente[1]}\tEmail: {cliente[2]}\tSenha: {cliente[3]}\tEndereço: {cliente[4]}\tContato: {cliente[5]}\n')
     except mysql.connector.Error as err:
         print(err)
         return None
@@ -185,11 +185,11 @@ def atualizarContaGerente(objeto_gerente, cursor, conexao):
                 print('Por favor, preencha todos os campos.')
                 return None
 
-            objeto_gerente.nome = novo_nome
-            objeto_gerente.email = novo_email
-            objeto_gerente.senha = nova_senha
+            objeto_gerente.nome_gerente = novo_nome
+            objeto_gerente.email_gerente = novo_email
+            objeto_gerente.senha_gerente = nova_senha
 
-            cursor.execute(f'UPDATE gerente SET nome_gerente = "{objeto_gerente.nome}", email_gerente = "{objeto_gerente.email}", senha_gerente = "{objeto_gerente.senha}" WHERE email_gerente = "{objeto_gerente.email}"')
+            cursor.execute(f'UPDATE gerente SET nome_gerente = "{objeto_gerente.nome_gerente}", email_gerente = "{objeto_gerente.email_gerente}", senha_gerente = "{objeto_gerente.senha_gerente}" WHERE id_gerente = "{objeto_gerente.id_gerente}"')
             conexao.commit()
             print('Dados atualizados com sucesso!')
 
@@ -228,7 +228,7 @@ def cadastrarIngrediente(cursor, conexao, nome, unidade_medida):
 
 def cadastrarProdutoIngrediente(cursor, conexao, id_produto, id_ingrediente, quantidade_usada):
     try:
-        cursor.execute("INSERT INTO produto_ingrediente (id_produto, id_ingrediente, quantidade_usada) VALUES (%s, %s, %s)", (id_produto, id_ingrediente, quantidade_usada))
+        cursor.execute("INSERT INTO produtoingrediente (id_produto, id_ingrediente, quantidade_usada) VALUES (%s, %s, %s)", (id_produto, id_ingrediente, quantidade_usada))
         conexao.commit()
     except mysql.connector.Error as err:
         print(f"Erro ao cadastrar produto ingrediente: {err}")
@@ -322,8 +322,8 @@ def removerProduto(cursor, conexao):
             else:
                 print('Deseja remover o produto? (1)-Sim (0)-Não')
                 if (input() == '1'):
-                    cursor.execute(f'DELETE FROM compra WHERE id_produto = "{id}"')
-                    cursor.execute(f'DELETE FROM produto_ingrediente WHERE id_produto = "{id}"')
+                    cursor.execute(f'DELETE FROM pedidoproduto WHERE id_produto = "{id}"')
+                    cursor.execute(f'DELETE FROM produtoingrediente WHERE id_produto = "{id}"')
                     cursor.execute(f'DELETE FROM produto WHERE id_produto = "{id}"')
                     conexao.commit()
                     print('Produto removido com sucesso!')
@@ -347,14 +347,14 @@ def listarProdutos(cursor):
 def buscarProduto(cursor):
     try:
         id = input('Digite o ID do produto: ')
-        cursor.execute(f'SELECT * FROM produto WHERE id_produto = "{id}"')
+        cursor.execute(f'SELECT * FROM Produto WHERE id_produto = "{id}"')
         resultado = cursor.fetchone()
         if resultado is None:
             print('Produto não encontrado!')
             return None
         else:
             produto = Produto(resultado[0], resultado[1], resultado[2], resultado[3])
-            print(f'ID: {produto.produto_id}\tNome: {produto.nome}\tDescrição: {produto.descricao}\tPreço: {produto.preco}\n')
+            print(f'ID: {produto.id_produto}\tNome: {produto.nome_produto}\tDescrição: {produto.descricao}\tPreço: {produto.preco}\n')
             return produto
     except mysql.connector.Error as err:
         print(err)
@@ -389,11 +389,10 @@ def fazerPedido(objeto_cliente, cursor, conexao):
                     produto = Produto(resultado[0], resultado[1], resultado[2], resultado[3])
                     quantidade_comprada = input('Digite a quantidade que deseja comprar: ')
                     valor_compra = produto.preco * quantidade_comprada   
-                    compra = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
-                    cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.id_pedido}", "{compra.id_produto}", "{compra.quantidade_comprada}")')
-                    compra = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
-                    cursor.execute(f'INSERT INTO compra (id_pedido, id_produto, quantidade_comprada) VALUES ("{compra.pedido_id}", "{compra.produto_id}", "{compra.quantidade_comprada}")')
+                    pedidoProduto = PedidoProduto(id_pedido, id_produto, quantidade_comprada)
+                    cursor.execute(f'INSERT INTO pedidoproduto (id_pedido, id_produto, quantidade_comprada) VALUES ("{pedidoProduto.id_pedido}", "{pedidoProduto.id_produto}", "{pedidoProduto.quantidade_comprada}")')
                     conexao.commit()
+
                     input('Deseja continuar comprando? (1)-Sim (0)-Não')
                     if input() == '0':
                         cursor.execute(f'UPDATE pedido SET valor_total = "{valor_total + valor_compra}" WHERE id_pedido = "{id_pedido}"')
@@ -438,7 +437,7 @@ def buscarPedido(cursor):
             return None
         else:
             pedido = Pedido(resultado[0], resultado[1], resultado[2])
-            print(f'ID: {pedido.pedido_id}\tCPF do cliente: {pedido.cliente_cpf}\tValor total: {pedido.valor_total}\n')
+            print(f'ID: {pedido.id_pedido}\tCPF do cliente: {pedido.id_cliente}\tValor total: {pedido.valor_total}\n')
             return pedido
     except mysql.connector.Error as err:
         print(err)
