@@ -5,8 +5,8 @@ import mysql.connector
 conexao = mysql.connector.connect(
     host='localhost',
     user='root',
-    password='12345678',
-    database='projetoteste'
+    password='55879276',
+    database='projeto-teste'
 )
 if conexao.is_connected:  
     # Criar um cursor
@@ -14,7 +14,7 @@ if conexao.is_connected:
     
     # Opções globais ###########################################################
     def menuUsuario():
-        print('Bem vindo à Padaria 2 Amantes!')
+        print('\nBem vindo à Padaria 2 Amantes!')
         print('Que tipo de usuário você é? \n(1)-Cliente \n(2)-Gerente \n(0)-Sair\n')
 
     def menuLogin():
@@ -88,8 +88,8 @@ if conexao.is_connected:
                                     if opcao == '1': # Fazer um pedido
                                         fazerPedido(cursor, conexao, cliente)
                                     elif opcao == '2': # Listar Pedidos
-                                        listarPedidos(cursor, cliente)
-                                    elif opcao == '3': # Cancelar Pedido
+                                        listarPedidosPorCliente(cursor, cliente)
+                                    elif opcao == '0': # Cancelar Pedido
                                         break
                                     else:
                                         print('Opção inválida!')
@@ -161,7 +161,7 @@ if conexao.is_connected:
                                         listarPedidos(cursor)
                                     elif opcao == '2': # Buscar Pedido
                                         buscarPedido(cursor)
-                                    elif opcao == '3': # Atualizar Pedido
+                                    elif opcao == '0': # Voltar
                                         break
                                     else:
                                         print('Opção inválida!')
@@ -207,11 +207,11 @@ if conexao.is_connected:
         elif opcao == '0': # Sair
             cursor.close()
             conexao.close()
-            print('Saindo...')
+            print('Saindo...\n')
             break
 
         else:
-            print('Opção inválida!')
+            print('Opção inválida!\n')
 
 else:
     print('Falha na conexão')

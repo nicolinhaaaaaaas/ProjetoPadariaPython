@@ -5,7 +5,7 @@ CREATE TABLE Cliente (
     senha_cliente VARCHAR(100),
     endereco VARCHAR(200),
     contato VARCHAR(20),
-    PRIMARY KEY (cpf_cliente)
+    PRIMARY KEY (cpf_cliente) 
 );
 
 CREATE TABLE Gerente (
@@ -24,7 +24,7 @@ CREATE TABLE Funcionario (
     cargo VARCHAR(100),
     salario DECIMAL(10, 2),
     PRIMARY KEY (id_funcionario),
-    FOREIGN KEY (id_gerente) REFERENCES Gerente(id_gerente)
+    FOREIGN KEY (id_gerente) REFERENCES Gerente(id_gerente) ON DELETE CASCADE
 );
 
 CREATE TABLE Produto (
@@ -45,12 +45,9 @@ CREATE TABLE Ingrediente (
 CREATE TABLE Pedido (
     id_pedido INT AUTO_INCREMENT,
     id_cliente VARCHAR(50),
-    id_funcionario INT,
-    status_pedido VARCHAR(50),
     valor_total DECIMAL(10, 2),
     PRIMARY KEY (id_pedido),
-    FOREIGN KEY (id_cliente) REFERENCES Cliente(cpf_cliente),
-    FOREIGN KEY (id_funcionario) REFERENCES Funcionario(id_funcionario)
+    FOREIGN KEY (id_cliente) REFERENCES Cliente(cpf_cliente) ON DELETE CASCADE
 );
 
 CREATE TABLE PedidoProduto (
@@ -58,15 +55,14 @@ CREATE TABLE PedidoProduto (
     id_produto INT,
     quantidade_comprada INT,
     PRIMARY KEY (id_pedido, id_produto),
-    FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido),
-    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto)
+    FOREIGN KEY (id_pedido) REFERENCES Pedido(id_pedido) ON DELETE CASCADE, 
+    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto) ON DELETE CASCADE
 );
 
 CREATE TABLE ProdutoIngrediente (
     id_produto INT,
     id_ingrediente INT,
-    quantidade_usada INT,
     PRIMARY KEY (id_produto, id_ingrediente),
-    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto),
-    FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente(id_ingrediente)
+    FOREIGN KEY (id_produto) REFERENCES Produto(id_produto) ON DELETE CASCADE,
+    FOREIGN KEY (id_ingrediente) REFERENCES Ingrediente(id_ingrediente) ON DELETE CASCADE
 );
